@@ -27,11 +27,21 @@ const getAllUsers = async (limit = 10, offset = 0) => {
 };
 
 const updateUser = async (id, name, email) => {
-  // The query updates name/email only if provided
+  //Get the current user data first
+  const checkUser = await pool.query("SELECT * FROM users WHERE id = $1", [id]);
+  const currentUser = checkUser.rows[0];
+
+  if (!currentUser) return null;
+
+  //Updates provided values
+  const newName = name || currentUser.name;
+  const newEmail = email || currentUser.email;
+
   const result = await pool.query(
     "UPDATE users SET name = $1, email = $2 WHERE id = $3 RETURNING id, name, email",
-    [name, email, id]
+    [newName, newEmail, id]
   );
+
   return result.rows[0];
 };
 

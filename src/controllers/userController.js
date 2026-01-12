@@ -13,6 +13,7 @@ const getUsers = async (req, res) => {
 
   try {
     if (cache.has(cacheKey)) {
+      console.log(`\n⚡ CACHE HIT: Serving data from memory`);
       return res.json(cache.get(cacheKey));
     }
 
